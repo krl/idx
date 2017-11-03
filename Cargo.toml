@@ -7,10 +7,10 @@ repository = "https://github.com/krl/idx"
 documentation = "https://docs.rs/idx/"
 
 name = "idx"
-version = "0.1.0"
+version = "0.1.1"
 
 [dependencies]
-diskvec = "0.1.1"
+diskvec = "0.1.2"
 seahash = "3.0"
 
 [dev-dependencies]

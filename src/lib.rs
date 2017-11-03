@@ -195,7 +195,7 @@ impl<K: Copy + PartialEq + Hash, V: Copy + Hash> RawPage<K, V> {
 
 impl<K: Copy + PartialEq + Hash, V: Copy + Hash> Idx<K, V> {
     /// Construct a new `Idx` given a path
-    pub fn new<P: Into<PathBuf> + Clone>(path: P) -> io::Result<Self> {
+    pub fn new<P: Into<PathBuf>>(path: P) -> io::Result<Self> {
         let vec = DiskVec::new(path)?;
         if vec.len() == 0 {
             assert_eq!(vec.push(RawPage::new())?, 0)

@@ -1,16 +1,16 @@
 [package]
 authors = ["Kristoffer Ström <kristoffer@rymdkoloni.se>"]
-keywords = ["index", "datastructure"]
 description = "Append-only, on-disk key-value index"
-license = "GPL-3.0"
-repository = "https://github.com/krl/idx"
 documentation = "https://docs.rs/idx/"
-
+keywords = ["index", "datastructure"]
+license = "GPL-3.0"
 name = "idx"
+repository = "https://github.com/krl/idx"
 version = "0.1.1"
 
 [dependencies]
-diskvec = "0.1.2"
+memmap = "0.6.2"
+parking_lot = "0.5.3"
 seahash = "3.0"
 
 [dev-dependencies]

@@ -2,8 +2,11 @@
 //!
 //! Only inserts are supported, updates or deletes not.
 #![deny(missing_docs)]
-extern crate diskvec;
+extern crate memmap;
+extern crate parking_lot;
 extern crate seahash;
+
+mod diskvec;
 
 use std::path::PathBuf;
 use std::marker::PhantomData;
@@ -311,8 +314,10 @@ mod test {
 
         for _ in 0..n_threads {
             let idx = idx.clone();
-            handles.push(thread::spawn(move || for i in 0..N {
-                idx.insert(i, i).unwrap();
+            handles.push(thread::spawn(move || {
+                for i in 0..N {
+                    idx.insert(i, i).unwrap();
+                }
             }))
         }
 

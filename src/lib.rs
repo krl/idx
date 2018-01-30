@@ -201,8 +201,15 @@ impl<K: Copy + PartialEq + Hash, V: Copy + Hash> Idx<K, V> {
     pub fn new<P: Into<PathBuf>>(path: P) -> io::Result<Self> {
         let vec = DiskVec::new(path)?;
         if vec.len() == 0 {
-            assert_eq!(vec.push(RawPage::new())?, 0)
+            vec.push(RawPage::new())?;
         }
+        Ok(Idx { vec })
+    }
+
+    /// Construct a new in-memory `Idx`
+    pub fn anonymous() -> io::Result<Self> {
+        let vec = DiskVec::anonymous()?;
+        vec.push(RawPage::new())?;
         Ok(Idx { vec })
     }
 
@@ -308,6 +315,33 @@ mod test {
     fn multithreading() {
         let tempdir = TempDir::new("idx").unwrap();
         let idx = Arc::new(Idx::new(tempdir.path()).unwrap());
+
+        let n_threads = 16;
+        let mut handles = vec![];
+
+        for _ in 0..n_threads {
+            let idx = idx.clone();
+            handles.push(thread::spawn(move || {
+                for i in 0..N {
+                    idx.insert(i, i).unwrap();
+                }
+            }))
+        }
+
+        for handle in handles {
+            handle.join().unwrap();
+        }
+
+        for i in 0..N {
+            assert_eq!(idx.get(&i).unwrap(), &i)
+        }
+
+        assert_eq!(idx.get(&N), None);
+    }
+
+    #[test]
+    fn multithreading_anon() {
+        let idx = Arc::new(Idx::anonymous().unwrap());
 
         let n_threads = 16;
         let mut handles = vec![];

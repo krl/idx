@@ -406,6 +406,31 @@ mod test {
     }
 
     #[test]
+    fn stress_anon() {
+        let array = Arc::new(DiskVec::anonymous().unwrap());
+
+        let n_threads = 16;
+        let mut handles = vec![];
+
+        for thread in 0..n_threads {
+            let array = array.clone();
+            handles.push(thread::spawn(move || {
+                for i in 0..N {
+                    if i % n_threads == thread {
+                        array.push(CheckSummedUsize::new(i)).unwrap();
+                    }
+                }
+            }));
+        }
+
+        for handle in handles {
+            handle.join().unwrap();
+        }
+
+        assert_eq!(array.len(), N);
+    }
+
+    #[test]
     fn mutable_access() {
         let tempdir = TempDir::new("diskarray").unwrap();
         let array = Arc::new(DiskVec::new(tempdir.path()).unwrap());

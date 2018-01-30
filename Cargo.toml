@@ -6,7 +6,7 @@ keywords = ["index", "datastructure"]
 license = "GPL-3.0"
 name = "idx"
 repository = "https://github.com/krl/idx"
-version = "0.1.1"
+version = "0.2.0"
 
 [dependencies]
 memmap = "0.6.2"
